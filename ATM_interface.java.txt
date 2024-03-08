@@ -1,0 +1,139 @@
+import java.util.ArrayList;
+
+import java.util.Scanner;
+
+public class ATM {
+    private String userId;
+    private String userPin;
+    private double balance;
+    private ArrayList<String> transactions;
+
+    public ATM(String userId, String userPin, double balance) {
+        this.userId = userId;
+        this.userPin = userPin;
+        this.balance = balance;
+        this.transactions = new ArrayList<String>();
+    }
+
+    public void showMenu() {
+        System.out.println("\n");
+        System.out.println("ATM Menu:");
+        System.out.println("1. Transactions History");
+        System.out.println("2. Withdraw");
+        System.out.println("3. Deposit");
+        System.out.println("4. Transfer");
+        System.out.println("5. Quit");
+        System.out.print("Please select an option: ");
+    }
+
+    public void showTransactions() {
+        System.out.println("\n");
+        System.out.println("Transactions:");
+        for (String transaction : this.transactions) {
+            System.out.println(transaction);
+        }
+        System.out.println("Avaliable Balance:"+ this.balance);
+    }
+
+    public void withdraw(double amount) {
+        if (this.balance >= amount) {
+            this.balance -= amount;
+            String transaction = "Withdrawn " + amount + " from account.";
+            this.transactions.add(transaction);
+            System.out.println(transaction);
+            System.out.println("\n");
+            System.out.println("Avaliable Balance:"+ this.balance);
+        } else {
+            System.out.println("Insufficient balance.");
+        }
+    }
+
+    public void deposit(double amount) {
+        this.balance += amount;
+        String transaction = "Deposited " + amount + " to account.";
+        this.transactions.add(transaction);
+        System.out.println(transaction);
+        System.out.println("\n");
+        System.out.println("Avaliable Balance:"+ this.balance);
+    }
+
+    public void transfer(double amount, ATM recipient) {
+        if (this.balance >= amount) {
+            this.balance -= amount;
+            recipient.balance += amount;
+            String transaction = "Transferred " + amount + " to " + recipient.userId + ".";
+            this.transactions.add(transaction);
+            recipient.transactions.add("Received " + amount + " from " + this.userId + ".");
+            System.out.println(transaction);
+            System.out.println("\n");
+            System.out.println("Avaliable Balance:"+ this.balance);
+        } else {
+            System.out.println("Insufficient balance.");
+        }
+    }
+
+    
+public static void main(String[] args) {
+    // Create an ATM object with user id "user123", user pin "1234", and balance of 1000.0
+    ATM atm = new ATM("Sahilkhu9", "8605", 1000.0);
+
+    
+    Scanner scanner = new Scanner(System.in);
+
+    
+    System.out.print("Enter user id: ");
+    String userIdInput = scanner.nextLine();
+
+    
+    System.out.print("Enter user pin: ");
+    String userPinInput = scanner.nextLine();
+
+    
+    if (userIdInput.equals(atm.userId) && userPinInput.equals(atm.userPin)) {
+        
+        boolean quit = false;
+        while (!quit) {
+            atm.showMenu(); 
+            int choice = scanner.nextInt(); 
+            switch (choice) {
+                case 1:
+                   
+                    atm.showTransactions();
+                    break;
+                case 2:
+                    
+                    System.out.print("Enter amount to withdraw: ");
+                    double withdrawAmount = scanner.nextDouble();
+                    atm.withdraw(withdrawAmount);
+                    break;
+                case 3:
+                   
+                    System.out.print("Enter amount to deposit: ");
+                    double depositAmount = scanner.nextDouble();
+                    atm.deposit(depositAmount);
+                    break;
+                case 4:
+                    
+                    System.out.print("Enter recipient user id: ");
+                    String recipientUserId = scanner.next();
+                    System.out.print("Enter amount to transfer: ");
+                    double transferAmount = scanner.nextDouble();
+                    ATM recipient = new ATM(recipientUserId, "XYZ9", 0.0); 
+                    atm.transfer(transferAmount, recipient);
+                    break;
+                case 5:
+                    
+                    System.out.println("Thank you for using the ATM.");
+                    quit = true;
+                    break;
+                default:
+                    
+                    System.out.println("Invalid choice. Please try again.");
+                    break;
+            }
+        }
+    } else {
+        System.out.println("Invalid user id or user pin.");
+    }
+}
+}
